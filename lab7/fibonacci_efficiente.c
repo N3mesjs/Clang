@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define ARRAY_SIZE 30
 /*
     Implementazione efficiente della funzione ricorsiva per il calcolo dei numeri di fibonacci. 
     La funzione fibonacci(n) è definita come: 
@@ -10,17 +11,21 @@
     Modifichiamola aggiungendo una memoria (un array) dove salviamo i valori di fibonacci calcolati e che controlliamo prima di ogni chiamata ricorsiva di fibonacci(x): se il valore fibonacci(x) è già stato calcolato, non invoco la funzione ricorsiva ma restituisco direttamente il valore che avevo salvato nella memoria.  
 */
 
-int *pArrFibonacci = malloc(sizeof(int)*20);
-
 int fibonacci(int n){
+    static int arr[ARRAY_SIZE] = {0};
     if(n==0){
         return 0;
     }
     if(n==1){
         return 1;
     }
+    if(arr[n]!=0){
+        return arr[n];
+    } 
 
-    return fibonacci(n-1)+fibonacci(n-2);
+    arr[n]=fibonacci(n-1)+fibonacci(n-2);
+
+    return arr[n];
 }
 
 
@@ -28,8 +33,8 @@ void test_fibonacci();
 void versione_per_consegna_moodle();
 
 int main (void) {
-    test_fibonacci();
-    //versione_per_consegna_moodle(); 
+    //test_fibonacci();
+    versione_per_consegna_moodle(); 
 }
 
 void test_fibonacci() {
