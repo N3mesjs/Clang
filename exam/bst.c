@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define COUNT 8
+
 typedef struct Node {
     int value;
     struct Node *left;
@@ -49,6 +51,34 @@ void print_rec(Node *ptr){
     //printf("%d\n", ptr->value);
 }
 
+void print_bst2D_util(Node *root, int space){
+    
+    // Base case
+    if (root == NULL)
+        return;
+ 
+    // Increase distance between levels
+    space += COUNT;
+ 
+    // Process right child first
+    print_bst2D_util(root->right, space);
+ 
+    // Print current node after space
+    // count
+    printf("\n");
+    for (int i = COUNT; i < space; i++)
+        printf(" ");
+    printf("%d\n", root->value);
+ 
+    // Process left child
+    print_bst2D_util(root->left, space);
+}
+
+void print_bst2D(Node *root){
+    // Pass initial space count as 0
+    print_bst2D_util(root, 0);
+}
+
 int main(void){
     Node *tree;
     init(&tree);
@@ -67,6 +97,8 @@ int main(void){
     insert_rec(&tree, 9);
 
     print_rec(tree);
+
+    print_bst2D(tree);
 
     return 0;
 }
