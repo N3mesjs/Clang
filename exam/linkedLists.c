@@ -46,9 +46,63 @@ void printList(Node *ptr){
     }
 }
 
+void ord_insert(Node **ptr, int val)
+{
+    Node *newNode = malloc(sizeof(Node));
+    newNode->next = NULL;
+    newNode->value = val;
+
+    // caso in cui primo elemento inesistente oppure piu grande di value
+    if(*ptr == NULL || (*ptr)->value >= val)
+    {
+        newNode->next = *ptr;
+        *ptr = newNode;
+        return;
+    }
+
+    // caso in cui il valore deve essere inserito in mezzo o in coda
+    Node *curr = *ptr;
+    while(curr->next != NULL && curr->next->value < val){
+        curr = curr->next;
+    }
+
+    newNode->next = curr->next;
+    curr->next = newNode;
+}
+
+//TODO: make a good function that works and uses a pointer to the tail!
+void clone_list(Node *srcList, Node **destList)
+{
+    if(srcList == NULL){
+        *destList = NULL;
+        return;
+    }
+
+    while(srcList != NULL){
+        //sufInsert(destList, srcList->value);
+        Node *newNode = malloc(sizeof(Node));
+        newNode->value = srcList->value;
+        newNode->next = NULL;
+
+        if(*destList == NULL){
+            *destList = newNode;
+        }
+
+        Node *tmpNode = *destList;
+        while(tmpNode->next != NULL){
+            tmpNode = tmpNode->next;
+        }
+
+        tmpNode->next = newNode;
+
+        srcList = srcList->next;
+    }
+}
+
 int main(void)
 {
     Node *LinkedList;
+    Node *SecondList;
 
     initList(&LinkedList);
     preInsert(&LinkedList, 42);
@@ -57,7 +111,14 @@ int main(void)
     sufInsert(&LinkedList, 53);
     sufInsert(&LinkedList, 73);
 
+    ord_insert(&LinkedList, 143);
+    ord_insert(&LinkedList, 2);
+
     printList(LinkedList);
+
+    initList(&SecondList);
+    clone_list(LinkedList, &SecondList);
+    printList(SecondList);
 
     return 0;
 }
