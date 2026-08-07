@@ -1,46 +1,63 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct node {
-    int val;
-    struct node *next;
+typedef struct Node {
+    int value;
+    struct Node *next;
 } Node;
 
-void pre_insert(Node **ptr, int value){
-    Node *tmp;
-    tmp = *ptr;
-
-    *ptr = malloc(sizeof(Node));
-    (*ptr)->val = value;
-    (*ptr)->next = tmp;
+void initList(Node **ptr){
+    *ptr = NULL;
 }
 
-void append(Node **ptr, int value){
-    while(*ptr != NULL){
-        ptr = &((*ptr)->next);
+void preInsert(Node **ptr, int value)
+{
+    Node *newNode = malloc(sizeof(Node));
+
+    newNode->next = *ptr;
+    newNode->value = value;
+
+    *ptr = newNode;
+}
+
+void sufInsert(Node **ptr, int value)
+{
+    Node *newNode = malloc(sizeof(Node));
+    newNode->value = value;
+    newNode->next = NULL;
+
+    if(*ptr == NULL){
+        *ptr = newNode;
+        return;
     }
 
-    pre_insert(ptr, value);
-}
+    Node *tmpNode = *ptr;
+    while(tmpNode->next != NULL){
+        tmpNode = tmpNode->next;
+    }
 
-void init(Node **ptr){
-    *ptr = NULL;
+    tmpNode->next = newNode;
 }
 
 void printList(Node *ptr){
     while(ptr != NULL){
-        printf("Value: %d, next: %p\n", (ptr)->val, (ptr)->next);
-        ptr = (ptr)->next;
+        printf("%d\n", ptr->value);
+        ptr = ptr->next;
     }
 }
 
-int main(){
-    Node *list; 
-    init(&list);
+int main(void)
+{
+    Node *LinkedList;
 
-    pre_insert(&list, 17); // Inserisce 17 in testa -> Lista: 17
-    pre_insert(&list, 29); // Inserisce 29 in testa -> Lista: 29 -> 17
-    append(&list, 93);     // Inserisce 93 in coda  -> Lista: 29 -> 17 -> 93
+    initList(&LinkedList);
+    preInsert(&LinkedList, 42);
+    preInsert(&LinkedList, 17);
+    preInsert(&LinkedList, 4);
+    sufInsert(&LinkedList, 53);
+    sufInsert(&LinkedList, 73);
 
-    printList(list); // Passo direttamente list per stamparla
+    printList(LinkedList);
+
+    return 0;
 }
