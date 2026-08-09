@@ -70,7 +70,7 @@ void ord_insert(Node **ptr, int val)
     curr->next = newNode;
 }
 
-//TODO: make a good function that works and uses a pointer to the tail!
+
 void clone_list(Node *srcList, Node **destList)
 {
     if(srcList == NULL){
@@ -78,23 +78,24 @@ void clone_list(Node *srcList, Node **destList)
         return;
     }
 
+    *destList = NULL;
+    Node *tail = NULL;
+
     while(srcList != NULL){
         //sufInsert(destList, srcList->value);
         Node *newNode = malloc(sizeof(Node));
+        if(newNode == NULL) return;
+
         newNode->value = srcList->value;
         newNode->next = NULL;
 
         if(*destList == NULL){
             *destList = newNode;
+        } else {
+            tail->next = newNode;
         }
 
-        Node *tmpNode = *destList;
-        while(tmpNode->next != NULL){
-            tmpNode = tmpNode->next;
-        }
-
-        tmpNode->next = newNode;
-
+        tail = newNode;
         srcList = srcList->next;
     }
 }
