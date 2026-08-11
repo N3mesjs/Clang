@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 typedef struct BST
 {
@@ -89,6 +90,20 @@ void bst_mirror(BST *srcPtr, BST **destPtr)
     bst_mirror(srcPtr->right, &((*destPtr)->left));
 }
 
+int bst_isInRange(BST *ptr, int min, int max){
+    if(ptr == NULL) return 1;
+
+    if(ptr->value <= min || ptr->value > max){
+        return 0;
+    }
+
+    return bst_isInRange(ptr->left, min, ptr->value) && bst_isInRange(ptr->right, ptr->value, max);
+}
+
+int bst_isBst(BST *ptr){
+    return bst_isInRange(ptr, INT_MIN, INT_MAX);
+}
+
 int main(void)
 {
     BST *bst;
@@ -111,6 +126,8 @@ int main(void)
 
     int target = 9;
     printf("\nL'albero contiene %d? %d\n", target, bst_search(bst, target));
+
+    printf("l'albero è BST? %d", bst_isBst(bst));
 
     return 0;
 }
