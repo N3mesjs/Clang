@@ -66,22 +66,25 @@ int bst_search(BST *ptr, int val)
 
 void bst_print(BST *ptr)
 {
-    if (ptr == NULL) return;
+    if (ptr == NULL)
+        return;
 
     printf("%d\n", ptr->value);
     bst_print(ptr->left);
     bst_print(ptr->right);
 }
 
-void bst_mirror(BST *srcPtr, BST **destPtr) 
+void bst_mirror(BST *srcPtr, BST **destPtr)
 {
-    if(srcPtr == NULL){
+    if (srcPtr == NULL)
+    {
         *destPtr = NULL;
         return;
     }
 
     BST *newNode = malloc(sizeof(BST));
-    if(newNode == NULL) return;
+    if (newNode == NULL)
+        return;
 
     newNode->value = srcPtr->value;
     *destPtr = newNode;
@@ -90,18 +93,63 @@ void bst_mirror(BST *srcPtr, BST **destPtr)
     bst_mirror(srcPtr->right, &((*destPtr)->left));
 }
 
-int bst_isInRange(BST *ptr, int min, int max){
-    if(ptr == NULL) return 1;
+int bst_isInRange(BST *ptr, int min, int max)
+{
+    if (ptr == NULL)
+        return 1;
 
-    if(ptr->value <= min || ptr->value > max){
+    if (ptr->value <= min || ptr->value > max)
+    {
         return 0;
     }
 
     return bst_isInRange(ptr->left, min, ptr->value) && bst_isInRange(ptr->right, ptr->value, max);
 }
 
-int bst_isBst(BST *ptr){
+int bst_isBst(BST *ptr)
+{
     return bst_isInRange(ptr, INT_MIN, INT_MAX);
+}
+
+void bst_remove(BST **ptr, int value)
+{
+    if (*ptr == NULL) return;
+
+    if (value < (*ptr)->value) {
+        bst_remove(&((*ptr)->left), value);
+    } else if (value > (*ptr)->value) {
+        bst_remove(&((*ptr)->right), value);
+    } else {
+        if ((*ptr)->left == NULL) {
+            BST *tmp = *ptr;
+            *ptr = (*ptr)->right;
+            free(tmp);
+        }
+        else if ((*ptr)->right == NULL) {
+            BST *tmp = *ptr;
+            *ptr = (*ptr)->left;
+
+            free(tmp);
+        } else {
+            BST *parent = *ptr;
+            BST *curr = (*ptr)->right;
+
+            while(curr->left != NULL){
+                parent = curr;
+                curr = curr->left;
+            }
+
+            (*ptr)->value = curr->value;
+
+            if(parent == *ptr){
+                parent->right = curr->right;
+            } else {
+                parent->left = curr->right;
+            }
+
+            free(curr);
+        }
+    }
 }
 
 int main(void)
