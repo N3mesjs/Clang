@@ -1,22 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node
-{
+struct nodoLista {
     int valore;
-    struct Node *next;
+    struct nodoLista *nextPtr;
 };
 
-typedef struct Node Node;
+typedef struct nodoLista Lista;
 
-void suf_insert(Node **ptrPtr, int val);
-void print_list(Node *ptr);
-void difference(Node *list1, Node *list2, Node **destPtr);
+void suf_insert(Lista **ptr, int val);
+void print_list(Lista *ptr);
+void difference(Lista *list1, Lista *list2, Lista **destPtr);
 
-int main()
-{
-    Node *l1 = NULL, *l2 = NULL;
-
+int main() {
+    Lista *l1 = NULL, *l2 = NULL;
+    
     suf_insert(&l1, 9);
     suf_insert(&l1, 5);
     suf_insert(&l1, 11);
@@ -29,86 +27,75 @@ int main()
     suf_insert(&l2, 22);
     suf_insert(&l2, 5);
     print_list(l2);
-
-    Node *l3 = NULL;
+    
+    Lista *l3 = NULL;
     difference(l1, l2, &l3);
     print_list(l3);
-
+    
     return 0;
 }
 
-void suf_insert(Node **ptr, int val)
-{
-    Node *newNode = malloc(sizeof(Node));
-    newNode->valore = val;
-    newNode->next = NULL;
+void suf_insert(Lista **ptr, int val) {
+    Lista *newNode = malloc(sizeof(Lista));
+    if(newNode == NULL) return;
 
-    if (*ptr == NULL)
-    {
+    newNode->valore = val;
+    newNode->nextPtr = NULL;
+
+    if(*ptr == NULL){
         *ptr = newNode;
         return;
     }
 
-    Node *curr = *ptr;
-    while (curr->next != NULL)
-    {
-        curr = curr->next;
+    Lista *curr = *ptr;
+    while(curr->nextPtr != NULL){
+        curr = curr->nextPtr;
     }
 
-    curr->next = newNode;
+    curr->nextPtr = newNode;
 }
 
-void print_list(Node *ptr)
-{
-    while (ptr != NULL)
-    {
+void print_list(Lista *ptr) {
+    while(ptr != NULL) {
         printf("%d ", ptr->valore);
-        ptr = ptr->next;
+        ptr = ptr->nextPtr;
     }
     printf("\n");
 }
 
-int contains(Node *ptr, int val)
-{
-    if (ptr == NULL)
-        return 0;
+int contains(Lista *list, int val){
+    while(list != NULL){
+        if(list->valore == val) return 1;
 
-    while (ptr != NULL)
-    {
-        if (val == ptr->valore)
-        {
-            return 1;
-        }
-
-        ptr = ptr->next;
+        list = list->nextPtr;
     }
+
     return 0;
 }
 
-void difference(Node *list1, Node *list2, Node **destPtr)
+void difference(Lista *list1, Lista *list2, Lista **destPtr) 
 {
     *destPtr = NULL;
-    Node *lastElement = NULL;
+    if(list1 == NULL || list2 == NULL) return;
 
-    while (list1 != NULL)
-    {
-        if (!contains(list2, list1->valore))
-        {
-            Node *newNode = malloc(sizeof(Node));
+    Lista *tail = NULL;
+
+    while(list1 != NULL){
+        if(!contains(list2, list1->valore)){
+            Lista *newNode = malloc(sizeof(Lista));
+            if(newNode == NULL) return;
+
             newNode->valore = list1->valore;
-            newNode->next = NULL;
+            newNode->nextPtr = NULL;
 
-            if (*destPtr == NULL)
-            {   
+            if(*destPtr == NULL){
                 *destPtr = newNode;
-                lastElement = newNode;
-            }
-            else
-            {
-                lastElement->next = newNode;
-                lastElement = newNode;
+                tail = *destPtr;
+            } else {
+                tail->nextPtr = newNode;
+                tail = newNode;
             }
         }
-        list1 = list1->next;
+        list1 = list1->nextPtr;
     }
 }
