@@ -1,32 +1,66 @@
 #include <stdio.h>
 
-void swap_eq(int* arr, int dim, int i, int j, int n) 
-{
+/*
+
+ */
+
+
+//PRE:
+//POST:
+void swap_eq(int* a, int dim, int i, int j, int n) {
     if(n==0) return;
 
-    int temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
+    int temp = a[j];
+    a[j] = a[i];
+    a[i] = a[j];
 
-    swap_eq(arr, dim, i+1, j+1, n-1);
+    swap_eq(a, dim, i+1, j+1, n-1);
 }
 
-void swap(int* arr, int dim, int m, int n, int p) 
-{
+
+//PRE:
+//POST:
+void swap(int* a, int dim, int m, int n, int p) {
     int lenA = n-m;
     int lenB = p-n;
 
     if(lenA == lenB){
-        swap_eq(arr, dim, m, n, lenA);
-    } else if(lenA < lenB){
-        swap_eq(arr, dim, m, n, lenA);
-        swap(arr, dim, n, n+lenA, p);
+        swap_eq(a, dim, m, n, lenA);
     } else if(lenA > lenB){
-        swap_eq(arr, dim, n-lenB, n, lenB);
-        swap(arr, dim, m, n-lenB, n);
+        swap_eq(a, dim, n-lenB, n, p);
+        swap(a, dim, m, n-lenB, n);
+    } else if(lenA < lenB){
+        swap_eq(a, dim, m, n, lenA);
+        swap(a, dim, n, n+lenA, p);
     }
 }
 
-int main(void){
-    return 0;
+
+
+int main(void) {
+    int dim;
+    int m;
+    int n;
+    int p;
+    
+    scanf("%d", &dim);
+    int arr[dim];
+    for(int i = 0; i < dim; i++){
+        scanf("%d", arr+i);
+    }
+    
+    void print_array(int *a, int d) {
+    for (int i = 0; i < d; i++) {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+
+scanf("%d", &m);
+scanf("%d", &n);
+scanf("%d", &p);
+
+swap(arr, dim, m, n, p); 
+print_array(arr, dim);
+
 }

@@ -7,13 +7,15 @@ int pal_ignore_aux(char *s, int i, int j, char c) {
     if(s[i] == c) return pal_ignore_aux(s, i+1, j, c);
     if(s[j] == c) return pal_ignore_aux(s, i, j-1, c);
 
-    if(s[i]!=s[j]) return 0;
-
-    return pal_ignore_aux(s, i+1, j-1, c);
+    if(s[i] == s[j]){
+        return pal_ignore_aux(s, i+1, j-1, c);
+    } else {
+        return 0;
+    }
 }
 
 int pal_ignore(char *s, char c) {
-    return pal_ignore_aux(s, 0, strlen(s) - 1, c);
+    return pal_ignore_aux(s, 0, strlen(s)-1, c);
 }
 
 int main() {
